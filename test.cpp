@@ -1,61 +1,131 @@
-//ysh_gpta
- #include<bits/stdc++.h>
- using namespace std;
- typedef long long ll;
- #define vi vector<ll>
- #define vvi vector<vi>
- #define pii pair<ll,ll>
- #define vpii vector<pair<ll,ll> >
- #define mp make_pair
- #define pb push_back
- #define INF 1000000000000000
- #define MOD 1000000007
- #define ff first
- #define ss second
- #define FastIO ios::sync_with_stdio(false); cin.tie(0); cout.tie(0);
+#include <iostream>
+#include <string.h>
+#include <stdio.h>
+#include <stack>
+using namespace std;
+#define SIZE 20001
+int  parent[SIZE] = {0};
+int  size[SIZE] = { 0 };
+typedef struct {
+	int a;
+	int b;
+	bool mark;
+}EDG;
+EDG edg[SIZE] = { 0 };
 
-vpii v;
-
-
- ll FindMaxSum(ll arr[], int n)
+int ROOT(int x)
 {
-  ll maxSum = arr[0];
-  ll maxSoFar = arr[0];
-  ll tempBegin = 0;
-  ll begin = 0;
-  ll end = 0;
-  for(int i=1;i<n;i++){
-    maxSoFar += arr[i];
-    if(maxSoFar<0){
-      maxSoFar = 0;
-      tempBegin = i+1;
-    }else if(maxSoFar>maxSum){
-      maxSum = maxSoFar;
-      begin = tempBegin;
-      end = i;
-    }
-  }
-  for(int i=begin;i<=end;i++)
-  v.pb(mp(-i,arr[i]));
-  return maxSum;
+	while (x != parent[x])
+	{
+		parent[x] = parent[parent[x]];
+		x = parent[x];
+	}
+	return x;
 }
+void UNION(int rx, int ry)
+{
+	if (size[rx] > size[ry])
+	{
+		parent[ry] = rx;
+		size[rx] = size[rx] + size[ry];
+	}
+	else
+	{
+		parent[rx] = ry;
+		size[ry] = size[ry] + size[rx];
+	}
+}
+int main()
+{
+///	freopen("NITTROAD_input.txt", "r", stdin);
+	int T;
+	scanf("%d",&T);
+	while (T--)
+	{
+		int Nodes, edgeCount, a, b;
+		scanf("%d", &Nodes);;
+		edgeCount = Nodes-1;
+		for (int i = 1; i <= Nodes; i++)
+		{
+			parent[i] = i;
+			size[i] = 1;
+		}
+		for (int i = 1; i <= edgeCount; i++)
+		{
+			// cin >> edg[i].a >> edg[i].b;
+			scanf("%d %d", &edg[i].a, &edg[i].b);	
+			edg[i].mark = false;
+		}
+		int Q = 0;
+		scanf("%d", &Q);
+		getchar();
+		char ch;
+		stack<int> R;
+		
+		while (Q--)
+		{
+			scanf("%c", &ch);
+			if (ch == 'R')
+			{
+				int k;
+				scanf("%d", &k);
+				R.push(k); // push in stack
+				edg[k].mark = true;
+			}
+			else if (ch == 'Q')
+			{
+				R.push(0); //push 0 to mark Query
+			}
+			getchar();
+		}
+		unsigned long long  ConnPair = 0;
+		// Preapare set of all nodes except the one which are MARKED
+		for (int i = 1; i <= edgeCount; i++)
+		{
+			if (edg[i].mark == false)
+			{
+				int ra = ROOT(edg[i].a);
+				int rb = ROOT(edg[i].b);
+				if (ra != rb)
+				{
+					ConnPair = ConnPair + (size[ra] * size[rb]); // Keep counting the connected Pairs
+					UNION(ra, rb);
+				}
+			}
+		}
 
- int main(){
- 	FastIO
- 	int t;
-  cin>>t;
-  while(t--){
-    int n;
-    cin>>n;
-    ll arr[n];
-    for(int i=0;i<n;i++)
-    cin>>arr[i];
-    ll maxSum = FindMaxSum(arr,n);
-    cout<<maxSum<<endl;
-    sort(v.begin(),v.end());
-    for(int i=0;i<v.size();i++)
-    cout<<v[i].second;
-    v.clear();
-  }
- 	return 0;
- }
+		unsigned long long  DicConnPair = (Nodes * (Nodes - 1) / 2) - ConnPair;
+		stack<unsigned long long> result;
+		/// extract Remove operation from STACK and save the ANswer in another stack 
+		while (!R.empty())
+		{
+			int popped = R.top();
+			R.pop();
+			if (popped > 0)
+			{
+				int ra = ROOT(edg[popped].a);
+				int rb = ROOT(edg[popped].b);
+				if (ra != rb)
+				{
+					DicConnPair = DicConnPair - (size[ra] * size[rb]); // Keep decrementing the pairs based on UNION 
+					UNION(ra, rb);
+				}
+			}
+			else
+			{
+				result.push(DicConnPair);
+			}
+
+		}
+		//ans
+		while (!result.empty()) {
+
+			printf("%llu\n", result.top());
+			result.pop();
+		}
+		if (T > 0)
+			printf("\n");
+		
+	}
+	return 0;
+}
