@@ -1,7 +1,7 @@
 //Source GeeksforGeeks
 
 #include<bits/stdc++.h>
-using namespaces std;
+using namespace std;
 
 int getMid(int s, int e) {  return s + (e -s)/2;  }
 
