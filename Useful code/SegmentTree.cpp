@@ -88,3 +88,36 @@ int main()
              getSum(st, n, 1, 3));
     return 0;
 }
+
+//Minimum Query tree
+void updateSegmentTreeRangeLAzy(int segmentTree[],int lazy[],int start,int end,int low,int high,int pos,int delta){
+    if(low>high)
+    return;
+
+    if(lazy[pos]!=0){
+        segmentTree[pos] += lazy[pos];
+        if(low!=high){//Not a leaf node
+            lazy[2*pos+1] += lazy[pos];
+            lazy[2*pos+2] += lazy[pos];
+        }
+        lazy[pos]=0;
+    }
+    //No overlap
+    if(start>high || end<low)
+    return;
+
+    //Complete overlap
+    if(start<=low && end>=high){
+        segmentTree[pos] += delta;
+        if(low!=high){
+            lazy[2*pos+1] += delta;
+            lazy[2*pos+2] += delta;
+        }
+        return;
+    }
+    //otherwise partial overlap
+    int mid = (low+high)/2;
+    updateSegmentTreeRangeLAzy(segmentTree,lazy,start,end,low,mid,2*pos+1,delta);
+    updateSegmentTreeRangeLAzy(segmentTree,lazy,start,end,mid+1,high,2*pos+2,delta);
+    segmentTree[pos] = min(segmentTree[2*pos+1],segmentTree[2*pos+2]);
+}
