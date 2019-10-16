@@ -89,6 +89,28 @@ int main()
     return 0;
 }
 
+//Construct Tree
+void constructTree(int arr[],int segmentTree[], int low,int high,int pos){
+    if(low == high){
+        segmentTree[pos] = arr[low];
+        return;
+    }
+    int mid = (low + high)/2;
+    constructTree(arr,segmentTree,low,mid,2*pos+1);
+    constructTree(arr,segmentTree,mid+1,high,2*pos+2);
+    segmentTree[pos] = min(segmentTree[2*pos+1],segmentTree[2*pos+2]);
+}
+
+int rangeQuerySearch(int segmentTree[],int qlow,int qhigh,int low,int high,int pos){
+    if(qlow<=low && qhigh>=high)//Total overlap
+    return segmentTree[pos];
+    if(qlow>high || qhigh<low)
+    return INT_MAX;
+    int mid = (low + high)/2;
+    return min(rangeQuerySearch(segmentTree,qlow,qhigh,low,mid,2*pos+1),rangeQuerySearch(segmentTree,qlow,qhigh,mid+1,high,2*pos+2));
+}
+
+
 //Minimum Query tree
 void updateSegmentTreeRangeLAzy(int segmentTree[],int lazy[],int start,int end,int low,int high,int pos,int delta){
     if(low>high)
