@@ -5,6 +5,7 @@
         "deque": "cpp",
         "forward_list": "cpp",
         "list": "cpp",
-        "iosfwd": "cpp"
+        "iosfwd": "cpp",
+        "ostream": "cpp"
     }
 }
