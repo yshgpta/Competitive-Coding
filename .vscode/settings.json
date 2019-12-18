@@ -6,6 +6,7 @@
         "forward_list": "cpp",
         "list": "cpp",
         "iosfwd": "cpp",
-        "ostream": "cpp"
+        "ostream": "cpp",
+        "string": "cpp"
     }
 }
