@@ -7,6 +7,9 @@
         "list": "cpp",
         "iosfwd": "cpp",
         "ostream": "cpp",
-        "string": "cpp"
+        "string": "cpp",
+        "bitset": "cpp",
+        "chrono": "cpp",
+        "algorithm": "cpp"
     }
 }
