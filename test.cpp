@@ -23,19 +23,9 @@ typedef long long ll;
 //void printArray(vi &v){for(int i=0;i<v.size();i++) cout<<v[i]<<endl; cout<<endl; }
 int main(){
    FastIO
-   ll n;
-   cin>>n;
-   ll dp1[n],dp2[n],dp3[n],dp4[n];
-   dp1[0] = 2;
-   dp2[0] = 3;
-   dp3[0] = 4;
-   dp4[0] = 1;
-   for(int i=1;i<n;i++){
-	   dp1[i] = 2*dp2[i-1]+dp1[i-1];
-	   dp2[i] = 2*dp1[i-1]+dp3[i-1]+dp2[i-1];
-	   dp3[i] = 3*dp1[i-1]+dp3[i-1]+dp3[i-1];
-	   dp4[i] = dp3[i-1]+dp4[i-1];
-   }
-   cout<<dp1[n-1] + dp2[n-1] + dp3[n-1] + dp4[n-1];
+   int k=1;
+   k = k<<4;
+   k += 3;
+   cout<<k;
    return 0;
 }
