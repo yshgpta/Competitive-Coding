@@ -23,7 +23,7 @@ using namespace std;
 
 
 typedef long long ll;
-// #define cerr if(false)cerr
+#define cerr if(false)cerr
 #define vb vector<bool>
 #define vi vector<ll>
 #define vvi vector<vi>
@@ -50,72 +50,40 @@ ll ncr(ll n,ll r){ll ans=1;r=min(r,n-r);for (int i=1;i<=r;i++){ans*=(n-r+i);ans/
 vector<int> Dx = {0, 0, -1, 1, -1, 1, -1, 1, 0};
 vector<int> Dy = {1, -1, 0, 0, -1, -1, 1, 1, 0};
 
-ll dp[100005];
-ll dph[100005];
+ll N = 2e5+5;
+vi t(2*N,0);
+ll n;
+
+void modify(ll p,ll value){
+    for(t[p+=n] = value; p>1 ; p>>=1) t[p>>1] = max(t[p],t[p^1]);
+}
+
+ll query(ll l,ll r){
+    ll res = 0;
+    for(l+=n,r+=n;l<r;l>>=1,r>>=1){
+        if(l&1) res = max(res,t[l++]);
+        if(r&1) res = max(res,t[--r]);
+    }
+    return res;
+}
+
 
 int main(){
     FastIO
-    ll n;
     cin>>n;
-    vi h(n),v(n);
-    repf(i,0,n){
-        ll a;
-        cin>>a;
-        h[i] = --a;
-    }
+    vi h(n),a(n);
     repf(i,0,n)
-    cin>>v[i];
+    cin>>h[i];
     repf(i,0,n)
-    dph[h[i]]=v[i];
-    dp[0] = v[0];
-    ll curr_h = h[0];
-    ordered_set st;
-    st.insert(h[0]);
+    cin>>a[i];
+    vi dp(n,0);
+    dp[0] = a[0];
+    modify(h[0]-1,dp[0]);
     repf(i,1,n){
-        if(curr_h<h[i]){
-            dp[i] = dp[i-1]+v[i];
-            curr_h=h[i];
-            dph[h[i]] = dp[i];
-            st.insert(h[i]);
-        }else{
-            auto ht = st.lower_bound(h[i]);
-            // cout<<"ht"<<*ht<<endl;
-            if(ht==st.begin()){
-                if(dph[h[i]]>dp[i-1]){
-                    dp[i] = dph[h[i]];
-                    curr_h = h[i];
-                }
-                else
-                {
-                    dp[i] = dp[i-1];
-                }
-                
-            }else{
-                ht--;
-                // cout<<"ht"<<*ht<<endl;
-                ll val = *ht;
-                if(dph[val]+v[i]>dp[i-1]){
-                    dp[i] = dph[val] + v[i];
-                    curr_h = h[i];
-                    dph[h[i]] = dp[i];
-                }
-                else{
-                    dp[i] = dp[i-1];
-                    dph[h[i]] = dph[val] + v[i];
-                }
-            }
-            st.insert(h[i]);
-        }
-                //     for(auto& it : st)
-                // cout<<it<<" ";
-                // cout<<endl;
+        dp[i] = query(0,h[i]) + a[i];
+        modify(h[i]-1,dp[i]);
     }
-    // repf(i,0,n)
-    // cout<<dp[i]<<" ";
-    // cout<<endl;
-    // repf(i,0,n)
-    // cout<<dph[i]<<" ";
-    cout<<dp[n-1];
-    
+    cout<<t[1];
+
     return 0;
 }
