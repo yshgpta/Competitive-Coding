@@ -1,11 +1,29 @@
 //ysh_gpta
 #include<bits/stdc++.h>
+//#include <boost/multiprecision/cpp_int.hpp>
+//using multiInt = boost::multiprecision::cpp_int;
 #include <ext/pb_ds/assoc_container.hpp>
 #include <ext/pb_ds/tree_policy.hpp>
 using namespace __gnu_pbds;
 #define ordered_set tree<ll, null_type,less<ll>, rb_tree_tag,tree_order_statistics_node_update>
 using namespace std;
+
+
+#define bit(x,i) (x&(1<<i))  //select the bit of position i of x
+#define IN(i,l,r) (l<i&&i<r)   //the next for are for checking bound
+#define LINR(i,l,r) (l<=i&&i<=r)
+#define LIN(i,l,r) (l<=i&&i<r)
+#define INR(i,l,r) (l<i&&i<=r)
+
+
+#define repf(i,L,R) for (int i = L; i < R; i++) //next four are for "for loops"
+#define repfe(i,L,R) for (int i = L; i <= R; i++)
+#define repb(i,L,R) for (int i = L; i > R; i--)
+#define repbe(i,L,R) for (int i = L; i >= R; i--)
+
+
 typedef long long ll;
+#define cerr if(false)cerr
 #define vb vector<bool>
 #define vi vector<ll>
 #define vvi vector<vi>
@@ -17,15 +35,54 @@ typedef long long ll;
 #define MOD 1000000007
 #define ff first
 #define ss second
+
+
+#define all(v) v.begin(), v.end()
+#define NP(v) next_permutation(all(v))
+#define watch(x) cerr << (#x) << " is " << (x) << endl;
 #define FastIO ios::sync_with_stdio(false); cin.tie(0); cout.tie(0);
-//ll gcd( ll a, ll b ){if(b==0) return a; else return gcd( b, a%b );}
-//ll ncr(ll n,ll r){ll ans=1;r=min(r,n-r);for (int i=1;i<=r;i++){ans*=(n-r+i);ans/=i;}return ans;}
-//void printArray(vi &v){for(int i=0;i<v.size();i++) cout<<v[i]<<endl; cout<<endl; }
+
+
+ll gcd( ll a, ll b ){if(b==0) return a; else return gcd( b, a%b );}
+ll ncr(ll n,ll r){ll ans=1;r=min(r,n-r);for (int i=1;i<=r;i++){ans*=(n-r+i);ans/=i;}return ans;}
+
+
+vector<int> Dx = {0, 0, -1, 1, -1, 1, -1, 1, 0};
+vector<int> Dy = {1, -1, 0, 0, -1, -1, 1, 1, 0};
+
+vvi adj(100);
+vi dp(100);
+vi val(100);
+vb vis(100,false);
+
+void dfs(ll v,ll f=0){
+   vis[v] = true;
+   ll ans = 0;
+   for(auto u : adj[v]){
+      if(!vis[u]){
+         dfs(u,v);
+         ans = max(ans,dp[u]);
+      }
+   }
+   dp[v] += ans;
+}
+
 int main(){
    FastIO
-   int k=1;
-   k = k<<4;
-   k += 3;
-   cout<<k;
+   ll n;
+   cin>>n;
+   repf(i,1,n+1)
+   cin>>val[i];
+   repf(i,1,n+1)
+   dp[i] = val[i];
+   repf(i,0,n-1){
+      ll a,b;
+      cin>>a>>b;
+      adj[a].pb(b);
+      adj[b].pb(a);
+   }
+   dfs(1);
+   repf(i,1,n+1)
+   cout<<dp[i]<<" ";
    return 0;
 }
