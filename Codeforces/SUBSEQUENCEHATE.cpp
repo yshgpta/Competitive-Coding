@@ -60,21 +60,21 @@ ll solve(){
         if(str[i]=='1')
         cnt++;
     }
-    ll s=0,e=0;
+    ll c_done=0;
+    ll start1=INT_MAX;
+    ll end1 = INT_MAX;
     repf(i,0,n) {
-        if(str[i]=='1'){
-            s=i; break;
-        }
+        if(str[i]=='1')
+        c_done++;
+        start1 = min(start1,i+1+cnt-2*c_done);
     }
-    repbe(i,n-1,0) {
-        if(str[i]=='1'){
-            e=i;
-            break;
-        }
+    c_done=0;
+    repbe(i,n-1,0){
+        if(str[i]=='1')
+        c_done++;
+        end1 = min(end1,n-i+cnt-2*c_done);
     }
-    ll c1 = e - cnt +1;
-    ll c2 = n - s -cnt;
-    return min(cnt,min(c1,c2));
+    return min(cnt,min(start1,end1));
 }
 int main(){
     FastIO
