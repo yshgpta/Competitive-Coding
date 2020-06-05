@@ -50,39 +50,42 @@ ll ncr(ll n,ll r){ll ans=1;r=min(r,n-r);for (int i=1;i<=r;i++){ans*=(n-r+i);ans/
 vector<int> Dx = {0, 0, -1, 1, -1, 1, -1, 1, 0};
 vector<int> Dy = {1, -1, 0, 0, -1, -1, 1, 1, 0};
 
-vvi adj(100);
-vi dp(100);
-vi val(100);
-vb vis(100,false);
 
-void dfs(ll v,ll f=0){
-   vis[v] = true;
-   ll ans = 0;
-   for(auto u : adj[v]){
-      if(!vis[u]){
-         dfs(u,v);
-         ans = max(ans,dp[u]);
+void solve(){
+   string str;
+   cin>>str;
+   stack<char> st;
+   repf(i,0,str.length()){
+      if(st.empty() || str[i]=='0'){
+         st.push(str[i]);
+         // cout<<i<<endl;
+      }
+      else if(str[i]=='1'){
+         if(st.top()=='0'){
+            st.pop();
+            // cout<<"pop"<<i<<endl;
+         }
+         
+         else{
+            st.push(str[i]);
+            // cout<<i<<endl;
+         }
+         
       }
    }
-   dp[v] += ans;
+   if(st.empty())
+   cout<<"-1";
+   string res;
+   while(!st.empty()){
+      res = st.top()+res;
+      st.pop();
+   }
+   cout<<res;
 }
-
 int main(){
    FastIO
-   ll n;
-   cin>>n;
-   repf(i,1,n+1)
-   cin>>val[i];
-   repf(i,1,n+1)
-   dp[i] = val[i];
-   repf(i,0,n-1){
-      ll a,b;
-      cin>>a>>b;
-      adj[a].pb(b);
-      adj[b].pb(a);
-   }
-   dfs(1);
-   repf(i,1,n+1)
-   cout<<dp[i]<<" ";
+   ll t=1;
+   repfe(i,1,t)
+   solve();
    return 0;
 }
